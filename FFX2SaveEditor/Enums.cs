@@ -21,7 +21,8 @@ namespace FFX2SaveEditor
         Config,
         AbilitiesDressSelect,
         Abilities,
-        MiniGameSelect
+        MiniGameSelect,
+        CreatureCreator
     }
 
     public enum PartyMember

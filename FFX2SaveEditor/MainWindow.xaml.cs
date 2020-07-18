@@ -75,6 +75,8 @@ namespace FFX2SaveEditor
                 lblHelp.Content = "Edit side quest values such as O'aka dept, Chocobo ranch, PR and Marraige campaigns, etc.";
             if (sender == btnConfig)
                 lblHelp.Content = "Change configuration of this application.";
+            if (sender == btnCreature)
+                lblHelp.Content = "Edit Creature Creator statistics.";
 
             SetLightSource((FrameworkElement)sender, btnItems);
             SetLightSource((FrameworkElement)sender, btnStoryCompletion);
@@ -86,6 +88,7 @@ namespace FFX2SaveEditor
             SetLightSource((FrameworkElement)sender, btnMiniGames);
             SetLightSource((FrameworkElement)sender, btnSidequests);
             SetLightSource((FrameworkElement)sender, btnConfig);
+            SetLightSource((FrameworkElement)sender, btnCreature);
             SetLightSource((FrameworkElement)sender, imgYuna);
             SetLightSource((FrameworkElement)sender, imgRikku);
             SetLightSource((FrameworkElement)sender, imgPaine);
@@ -129,6 +132,7 @@ namespace FFX2SaveEditor
             btnMiniGames.IsEnabled = false;
             btnSidequests.IsEnabled = false;
             btnConfig.IsEnabled = false;
+            btnCreature.IsEnabled = false;
 
             MenuScreen current = menuScreen;
             menuScreen = screen;
@@ -177,6 +181,9 @@ namespace FFX2SaveEditor
                 case MenuScreen.Config:
                     ClearConfigScreen();
                     break;
+                case MenuScreen.CreatureCreator:
+                    ClearCreatureCreatorScreen();
+                    break;
             }
         }
 
@@ -184,6 +191,14 @@ namespace FFX2SaveEditor
         {
             DoubleAnimation da = new DoubleAnimation(ActualHeight, TimeSpan.FromSeconds(0.25));
             da.Completed += SubMenuClear;
+            transUnderConstruction.BeginAnimation(TranslateTransform.YProperty, da);
+        }
+
+        private void ClearCreatureCreatorScreen()
+        {
+            DoubleAnimation da = new DoubleAnimation(ActualHeight, TimeSpan.FromSeconds(0.25));
+            da.Completed += SubMenuClear;
+            // TODO implement creator creator clear screen
             transUnderConstruction.BeginAnimation(TranslateTransform.YProperty, da);
         }
 
@@ -402,6 +417,8 @@ namespace FFX2SaveEditor
             transSidequests.BeginAnimation(TranslateTransform.YProperty, dau);
             dau.BeginTime += TimeSpan.FromMilliseconds(18); dau.To -= 70;
             transConfig.BeginAnimation(TranslateTransform.YProperty, dau);
+            dau.BeginTime += TimeSpan.FromMilliseconds(18); dau.To -= 70;
+            transCreature.BeginAnimation(TranslateTransform.YProperty, dau);
 
             DoubleAnimation dar = new DoubleAnimation(ActualWidth, TimeSpan.FromSeconds(0.25));
             if (menuScreen == MenuScreen.AbilitiesPartySelect) dar.To = 0;
@@ -430,6 +447,7 @@ namespace FFX2SaveEditor
             btnMiniGames.Visibility = Visibility.Hidden;
             btnSidequests.Visibility = Visibility.Hidden;
             btnConfig.Visibility = Visibility.Hidden;
+            btnCreature.Visibility = Visibility.Hidden;
            
             switch (menuScreen)
             {
@@ -473,6 +491,10 @@ namespace FFX2SaveEditor
                     btnConfig.Visibility = Visibility.Visible;
                     DisplayConfigScreen();
                     break;
+                case MenuScreen.CreatureCreator:
+                    btnCreature.Visibility = Visibility.Visible;
+                    DisplayCreatureCreatorScreen();
+                    break;
                 default:
                     break;
             }
@@ -493,6 +515,7 @@ namespace FFX2SaveEditor
             btnMiniGames.Visibility = Visibility.Visible;
             btnSidequests.Visibility = Visibility.Visible;
             btnConfig.Visibility = Visibility.Visible;
+            btnCreature.Visibility = Visibility.Visible;
 
             DoubleAnimation dad = new DoubleAnimation(0, TimeSpan.FromSeconds(0.25));
             transItems.BeginAnimation(TranslateTransform.YProperty, dad);
@@ -514,6 +537,8 @@ namespace FFX2SaveEditor
             transSidequests.BeginAnimation(TranslateTransform.YProperty, dad);
             dad.BeginTime += TimeSpan.FromMilliseconds(18);
             transConfig.BeginAnimation(TranslateTransform.YProperty, dad);
+            dad.BeginTime += TimeSpan.FromMilliseconds(18);
+            transCreature.BeginAnimation(TranslateTransform.YProperty, dad);
 
             DoubleAnimation dar = new DoubleAnimation(0, TimeSpan.FromSeconds(0.25));
             transYuna.BeginAnimation(TranslateTransform.XProperty, dar);
@@ -540,6 +565,7 @@ namespace FFX2SaveEditor
             btnMiniGames.IsEnabled = true;
             btnSidequests.IsEnabled = true;
             btnConfig.IsEnabled = true;
+            btnCreature.IsEnabled = true;
             tbxGil.Visibility = Visibility.Visible;
             lblPaineHP.Visibility = Visibility.Visible;
             tbxPaineLvl.Visibility = Visibility.Visible;
@@ -1374,6 +1400,16 @@ namespace FFX2SaveEditor
             transUnderConstruction.BeginAnimation(TranslateTransform.YProperty, da);
         }
 
+        private void DisplayCreatureCreatorScreen()
+        {
+            btnCreature.IsEnabled = true;
+            CreatureCreator cc_dialog = new CreatureCreator(save);
+            if(cc_dialog.ShowDialog() == true)
+            {
+                save.WriteCreatureCreatorData();
+            }
+        }
+
         private TreeViewItem FindChild(TreeViewItem parent, string name)
         {
             foreach (TreeViewItem item in parent.Items)
@@ -1655,6 +1691,14 @@ namespace FFX2SaveEditor
                 SwitchToScreen(MenuScreen.Main);
             else
                 SwitchToScreen(MenuScreen.Config);
+        }
+
+        private void btnCreature_Click(object sender, RoutedEventArgs e)
+        {
+            if (menuScreen == MenuScreen.CreatureCreator)
+                SwitchToScreen(MenuScreen.Main);
+            else
+                SwitchToScreen(MenuScreen.CreatureCreator);
         }
 
         private void item_PreviewMouseDown(object sender, MouseButtonEventArgs e)

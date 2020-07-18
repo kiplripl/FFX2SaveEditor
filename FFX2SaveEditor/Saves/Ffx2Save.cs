@@ -32,6 +32,18 @@ namespace FFX2SaveEditor
         public uint SuccessfulDigs { get; set; }
         public uint FailedDigs { get; set; }
         public uint GunnerPoints { get; set; }
+        public byte StandardCupWins { get; set; }
+        public byte StandardCupHardWins { get; set; }
+        public byte GrandCupWins { get; set; }
+        public byte GrandCupHardWins { get; set; }
+        public byte ChocoboCupWins { get; set; }
+        public byte CactuarCupWins { get; set; }
+        public byte YouthLeagueCupWins { get; set; }
+        public byte AeonCupWins { get; set; }
+        public byte FiendWorldCupWins { get; set; }
+        public byte FarplaneCupWins { get; set; }
+        public bool AllArenaFightsUnlocked { get; set; }
+        public byte[] RawArenaFightsArray { get; set; }
         public uint SlCredits5 { get; set; }
         public uint HoverRides { get; set; }
         public byte[] ChocoboSuccesses { get; set; }
@@ -130,6 +142,23 @@ namespace FFX2SaveEditor
 
             br.BaseStream.Seek(0x3b0, SeekOrigin.Begin);
             GunnerPoints = br.ReadUInt32();
+
+            br.BaseStream.Seek(0x48d, SeekOrigin.Begin);
+            StandardCupWins = br.ReadByte();
+            StandardCupHardWins = br.ReadByte();
+            GrandCupWins = br.ReadByte();
+            GrandCupHardWins = br.ReadByte();
+            ChocoboCupWins = br.ReadByte();
+            CactuarCupWins = br.ReadByte();
+            YouthLeagueCupWins = br.ReadByte();
+            AeonCupWins = br.ReadByte();
+            FiendWorldCupWins = br.ReadByte();
+            FarplaneCupWins = br.ReadByte();
+
+            // TODO parse individual fights
+            AllArenaFightsUnlocked = false;
+            br.BaseStream.Seek(0x56c, SeekOrigin.Begin);
+            RawArenaFightsArray = br.ReadBytes(16);
 
             br.BaseStream.Seek(0x4b4, SeekOrigin.Begin);
             SlCredits5 = br.ReadUInt32();
@@ -369,6 +398,36 @@ namespace FFX2SaveEditor
             // Actual gil value
             bw.BaseStream.Seek(0x7818, SeekOrigin.Begin);
             bw.Write(Gil);
+        }
+        public virtual void WriteCreatureCreatorData()
+        {
+            bw.BaseStream.Seek(0x48d, SeekOrigin.Begin);
+            bw.Write(StandardCupWins);
+            bw.Write(StandardCupHardWins);
+            bw.Write(GrandCupWins);
+            bw.Write(GrandCupHardWins);
+            bw.Write(ChocoboCupWins);
+            bw.Write(CactuarCupWins);
+            bw.Write(YouthLeagueCupWins);
+            bw.Write(AeonCupWins);
+            bw.Write(FiendWorldCupWins);
+            bw.Write(FarplaneCupWins);
+
+            if (AllArenaFightsUnlocked)
+            {
+                // Unlocks all arena fights.
+                // Aeons are glitched, you can fight them but the name is blocked.
+                bw.BaseStream.Seek(0x56c, SeekOrigin.Begin);
+                byte b = (byte)(254 | RawArenaFightsArray[0]);
+                bw.Write(b);
+                b = 255;
+                for (int i = 1; i < 15; i++)
+                {
+                    bw.Write(b);
+                }
+                b = (byte)(3 | RawArenaFightsArray[15]);
+                bw.Write(b);
+            }
         }
 
         public virtual void WriteItem(byte index)

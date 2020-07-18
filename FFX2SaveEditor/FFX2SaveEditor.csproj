@@ -34,6 +34,10 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="System" />
@@ -64,6 +68,9 @@
     <Compile Include="PS3FileSystem\Ps3File.cs" />
     <Compile Include="PS3FileSystem\Ps3SaveManager.cs" />
     <Compile Include="PS3FileSystem\SecureFileInfo.cs" />
+    <Compile Include="CreatureCreator.xaml.cs">
+      <DependentUpon>CreatureCreator.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ThunderPlains.xaml.cs">
       <DependentUpon>ThunderPlains.xaml</DependentUpon>
     </Compile>
@@ -84,6 +91,10 @@
     <Compile Include="Saves\Ps2Save.cs" />
     <Compile Include="Saves\Ps3Save.cs" />
     <Compile Include="Utils.cs" />
+    <Page Include="CreatureCreator.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="ThunderPlains.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

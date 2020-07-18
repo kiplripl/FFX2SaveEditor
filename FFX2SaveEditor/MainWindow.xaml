@@ -311,7 +311,20 @@
                     <TranslateTransform x:Name="transConfig" X="0" Y="0" />
                 </Button.RenderTransform>
             </Button>
-        </Grid>
+			<Button Style="{StaticResource Ffx2Button}" x:Name="btnCreature" Cursor="Hand" HorizontalAlignment="Left" Margin="180,880,0,0" VerticalAlignment="Top" Width="360" Height="60" FontWeight="Bold" FontSize="28" GotFocus="Button_GotFocus" MouseEnter="Button_MouseEnter" Click="btnCreature_Click">
+				<Button.Effect>
+					<DropShadowEffect BlurRadius="0" ShadowDepth="10" Direction="315" Color="Black" Opacity="0.5"/>
+				</Button.Effect>
+				<Button.RenderTransform>
+					<TranslateTransform x:Name="transCreature" X="0" Y="0" />
+				</Button.RenderTransform>
+				<TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Creature Creator" Foreground="#E1E1E1">
+					<TextBlock.Effect>
+						<DropShadowEffect BlurRadius="0" Direction="315" Color="Black" ShadowDepth="3"/>
+					</TextBlock.Effect>
+				</TextBlock>
+			</Button>
+		</Grid>
         <Grid Name="ItemPage" MouseWheel="MainPage_MouseWheel" KeyDown="MainPage_KeyDown">
             <Image Name="itemHeader1" HorizontalAlignment="Left" Height="39" Margin="166,281,0,0" VerticalAlignment="Top" Width="742" Source="/FFX2SaveEditor;component/Resources/ItemHeader.png">
                 <Image.RenderTransform>
